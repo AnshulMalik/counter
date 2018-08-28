@@ -1,0 +1,64 @@
+<html>
+    <head>
+        <style>
+            .container {
+                width: 70%;
+                margin: 0 auto;
+                text-align: center;
+                background-color: rgb(250, 250, 250);
+                font-family: 'Courier New', Courier, monospace;
+            }
+            #count {
+                font-size: 10em;
+            }
+            #counter-btn {
+                border-radius: 0px 0px 4px 4px;
+                border: 1px solid rgba(100, 100, 100, .3);
+                padding: 15px;
+                background-color: white;
+                cursor: pointer;
+                transition-duration: 100ms;
+                transition-timing-function:ease-in;
+                user-select: none;
+            }
+
+            #counter-btn:hover {
+                background-color: rgba(0, 0, 0, .9);
+                color: white;
+                
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <div id="count">0</div>
+            <div id="counter-btn">Increment</div>
+        </div>
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.1.1/socket.io.js"></script>
+        <script>
+            const btn = document.getElementById('counter-btn');
+            const elem = document.getElementById('count');
+
+            const socket = io('https://distributed-counter.now.sh');
+
+            socket.on('count', function(count) {
+                displayCount(count);
+            });
+
+            btn.addEventListener('click', increment);
+            
+            function displayCount(count) {
+                elem.innerHTML = count;
+            }
+
+            function increment() {
+                socket.emit('increment');
+            }
+
+            document.onload = function() {
+                socket.emit('count');
+            }
+        </script>
+    </body>
+</html>
